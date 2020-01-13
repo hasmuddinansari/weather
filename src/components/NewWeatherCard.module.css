@@ -1,0 +1,12 @@
+.card{
+    background-image: url('/images/weatherBack.jpg');
+    background-size: cover;
+    color:whitesmoke;
+    font-weight: 100;
+    text-shadow: 1px 1px 0 black;
+    height:auto;
+    width:auto;
+}
+.backgroundChange {
+    background-image: url("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiHy9ul_IDnAhUGdCsKHSV2C7oQjRx6BAgBEAQ&url=https%3A%2F%2Fwww.pixelstalk.net%2Fhd-weather-wallpapers%2F&psig=AOvVaw1VY3_b75ai9z6JkjYcKV6K&ust=1579018460131687");
+}

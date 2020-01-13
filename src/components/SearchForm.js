@@ -20,12 +20,15 @@ export default class SearchForm extends Component {
   submit = () => {
     const {getWeather} = this.props
     const {country, city} = this.state
-   return getWeather(city, country)
+    getWeather(city, country)
+    this.props.toggleChange()
   };
   render() {
     return (
       <div className="container d-flex justify-content-center align-items-center p-5">
-        <form className="flex-column col-md-5 col-12 bg-light  border p-2 d-flex">
+        <form onSubmit={(e)=>{e.preventDefault()
+                          return this.submit()
+          }} className="flex-column col-md-5 col-12 bg-light  border p-2 d-flex">
           <h2 className="text-center text-danger">Weather</h2>
           <TextField
             className="m-2"
@@ -34,7 +37,6 @@ export default class SearchForm extends Component {
             name="city"
             label="City"
             placeholder="New York, New Delhi..."
-            variant="outlined"
           />
           
             <TextField
@@ -43,7 +45,7 @@ export default class SearchForm extends Component {
               onChange={this.handleChange}
               name="country"
               label="Country ID"
-              variant="outlined"
+              
               placeholder="IN, UK, US..."
             />
            

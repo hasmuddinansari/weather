@@ -1,4 +1,6 @@
 import React from 'react'
+// http://openweathermap.org/img/wn/10d@2x.png
+// icon for weather condition
 
 export default function CountryWeatherCard({data}) {
     const {name, main, weather} = data[0]

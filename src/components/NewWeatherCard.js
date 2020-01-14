@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import style from "./NewWeatherCard.module.css"
 import SearchForm from "./SearchForm"
+import {connect} from "react-redux"
 
 
 const Cards = (props)=>{
@@ -20,24 +21,25 @@ const Cards = (props)=>{
 }
 
 export class NewWeatherCard extends Component {
-    constructor(props){
-        super(props)
-    }
-    kToCel = (tp)=>{
-        let c;
-        c = Math.round(tp-273)
-        return c
-    }
-    render() {
+        kToCel=(tm)=>{
+            let c = Math.round(tm-273)
+            return c
+        }
+
+        render(){
         if(!this.props.toggle){
-            return  <SearchForm toggleChange={this.props.toggleChange} getWeather={this.props.getWeather}/>
-          }
-        const {weather, name, main} = this.props.data
-        // console.log(this.props.data)
-        // console.log("main",main[0].temp)
-        const wValue = []
-        const names = [ "Min Temp", "Max Temp","Pressure", "Humadity", "Visibility", "Wind Speed"]
-        
+            return <SearchForm toggleChange={this.props.toggleChange}/>
+        }
+        else if(this.props.data.cod=='404'){
+            return (<div className="p-5">
+                <h1 className="text-danger">CITY NOT FOUND</h1>
+                <button onClick={this.props.toggleChange} className="btn btn-success px-5">GO BACK !!</button>
+            </div>)
+        }
+        const {data} = this.props
+        const{name, main, visibility, wind, weather} = data
+        const namesValue = [this.kToCel(main.temp_min), this.kToCel(main.temp_max), main.pressure, main.humidity,visibility, wind.speed]
+        const names = [ "Min Temp", "Max Temp","Pressure", "Humidity", "Visibility", "Wind Speed"]
         return (<>
         <div className="justify-content-center container-fluid row">
         <button onClick={this.props.toggleChange} className="btn btn-success px-5">Search New</button>
@@ -45,15 +47,15 @@ export class NewWeatherCard extends Component {
             <div className={`d-flex justify-content-center p-3`} >
                 <div className={`col-md-6 col-12 text-center ${style.card}`}>
                 <div>
-                <div className="row">
-                 {/* <h1 className="display-3">{this.kToCel(main.temp)}&deg;C</h1> */}
-                {/* <img src={`http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`}/> */}
+                <div className="row justify-content-center">
+                 <h1 className="display-3">{this.kToCel(main.temp)}&deg;C</h1>
+                <img src={`http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`}/>
                 </div>
-                {/* <h2>{weather[0].main}</h2> */}
-                <h3>{name}</h3>
+                <h2 title={weather[0].description}>{weather[0].main}</h2>
+                  <h3>{name}</h3>
                 </div>
-                {names.map(name=>{
-                    return <Cards key={name} name={name} value="203"/>
+                {names.map((name, index)=>{
+                    return <Cards key={name} name={name} value={namesValue[index]}/>
                 })}
                 </div>
                 </div>
@@ -63,5 +65,9 @@ export class NewWeatherCard extends Component {
         )
     }
 }
-
-export default NewWeatherCard
+const mapStateToProps = state =>{
+    return {
+        data:state.data
+    }
+}
+export default connect(mapStateToProps)(NewWeatherCard)

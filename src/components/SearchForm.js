@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import {connect} from "react-redux"
+import {searchWeather} from "./REDUX/Action"
 
 
-export default class SearchForm extends Component {
+const API_KEY ="b2123f5a744b70575982bffe867f5982"
+
+class SearchForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,11 +21,14 @@ export default class SearchForm extends Component {
         [e.target.name]: e.target.value
     });
   };
-  submit = () => {
-    const {getWeather} = this.props
-    const {country, city} = this.state
-    getWeather(city, country)
-    this.props.toggleChange()
+  submit = async() => {
+      const {city, country} = this.state
+      const apiCall = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}`)
+      const res = await apiCall.json()
+      const {searchWeather, toggleChange} = this.props
+      searchWeather(res)
+      toggleChange()
+    
   };
   render() {
     return (
@@ -62,4 +69,15 @@ export default class SearchForm extends Component {
     );
   }
 }
+const mapStateToProps =state=>{
+  return {
+    data:state.data
+  }
+}
+const mapDispatchToProps = dispatch =>{
+  return {
+    searchWeather:item=>dispatch(searchWeather(item))
+  }
+}
 
+export default connect(mapStateToProps, mapDispatchToProps)(SearchForm)
